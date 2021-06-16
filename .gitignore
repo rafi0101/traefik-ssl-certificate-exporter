@@ -1,0 +1,3 @@
+traefik-ssl-certificate-exporter
+traefik/acme.json
+certs/

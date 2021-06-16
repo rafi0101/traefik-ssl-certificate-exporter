@@ -1,0 +1,65 @@
+{
+  "certificateresolver1": {
+    "Account": {
+      "Email": "email@example.com",
+      "Registration": {
+        "body": {
+          "status": "valid",
+          "contact": [
+            "mailto:email@example.com"
+          ]
+        },
+        "uri": "https://acme-v02.api.letsencrypt.org/acme/acct/124448363"
+      },
+      "PrivateKey": "PRIVATEKEY",
+      "KeyType": "4096"
+    },
+    "Certificates": [
+      {
+        "domain": {
+          "main": "example.com",
+          "sans": [
+            "test.example.com"
+          ]
+        },
+        "certificate": "CERTIFICATE",
+        "key": "KEY",
+        "Store": "default"
+      },
+      {
+        "domain": {
+          "main": "example.org"
+        },
+        "certificate": "CERTIFICATE",
+        "key": "KEY",
+        "Store": "default"
+      }
+    ]
+  },
+  "certificateresolver2": {
+    "Account": {
+      "Email": "email@example.com",
+      "Registration": {
+        "body": {
+          "status": "valid",
+          "contact": [
+            "mailto:email@example.com"
+          ]
+        },
+        "uri": "https://acme-v02.api.letsencrypt.org/acme/acct/126945414"
+      },
+      "PrivateKey": "PRIVATEKEY",
+      "KeyType": "4096"
+    },
+    "Certificates": [
+      {
+        "domain": {
+          "main": "example.net"
+        },
+        "certificate": "CERTIFICATE",
+        "key": "KEY",
+        "Store": "default"
+      }
+    ]
+  }
+}
