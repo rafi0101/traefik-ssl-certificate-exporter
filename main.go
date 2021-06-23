@@ -18,6 +18,8 @@ func main() {
 	// pflag.String("certResolver", "dode", "Acme certresolver to extract these certs (requiered)")
 	pflag.String("source", "traefik/acme.json", "path to traefik acme.json")
 	pflag.String("dest", "certs/", "path to destination where to store certificates")
+	pflag.Int("owner", 0, "owner for the extracted cert/keys")
+	pflag.Int("group", 0, "group for the extracted cert/keys")
 
 	pflag.String("config", "", "Path to config file")
 
@@ -32,6 +34,9 @@ func main() {
 	viper.SetConfigFile(viper.GetString("config"))
 
 	viper.ReadInConfig()
+
+	ownerId := viper.GetInt("owner")
+	groupId := viper.GetInt("group")
 
 	acmejson, err := ioutil.ReadFile(viper.GetString("source"))
 	if err != nil {
@@ -55,6 +60,7 @@ func main() {
 			//Get cert destination folder path, and replace * (Wildcard) with "_"
 			certPath := viper.GetString("dest") + strings.Replace(certificate.Domain.Main, "*", "_", -1) + "/"
 			os.MkdirAll(certPath, 0755)
+			os.Chown(certPath, ownerId, groupId)
 
 			//Decode private key
 			privateKey, err := base64.StdEncoding.DecodeString(certificate.Key)
@@ -81,6 +87,7 @@ func main() {
 				os.Exit(1)
 			}
 			privateKeyFile.Chmod(0600)
+			privateKeyFile.Chown(ownerId, groupId)
 
 			//Write fullChain to destination path
 			fullChainFile, err := os.Create(certPath + "fullchain.pem")
@@ -94,6 +101,7 @@ func main() {
 				os.Exit(1)
 			}
 			fullChainFile.Chmod(0644)
+			fullChainFile.Chown(ownerId, groupId)
 
 			//Convert fullChain []byte to string
 			fullChainString := string(fullChain)
@@ -121,6 +129,7 @@ func main() {
 				os.Exit(1)
 			}
 			certFile.Chmod(0644)
+			certFile.Chown(ownerId, groupId)
 
 			//Write chain to destination path
 			chainFile, err := os.Create(certPath + "chain.pem")
@@ -134,6 +143,7 @@ func main() {
 				os.Exit(1)
 			}
 			chainFile.Chmod(0644)
+			chainFile.Chown(ownerId, groupId)
 
 		}
 	}
