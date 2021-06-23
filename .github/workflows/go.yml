@@ -1,0 +1,23 @@
+name: Go
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+
+  test:
+    name: Unit testing
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set up Go 
+      uses: actions/setup-go@v2
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v2
+ 
+    - name: Build go programm
+    - run: go build
