@@ -1,4 +1,5 @@
 # Traefik SSL Certificate Exporter
+[![Go](https://github.com/rafi0101/traefik-ssl-certificate-exporter/actions/workflows/go.yml/badge.svg)](https://github.com/rafi0101/traefik-ssl-certificate-exporter/actions/workflows/go.yml)
 ![Language](https://img.shields.io/badge/language-Golang-29BEB0.svg)
 [![PRWelcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/rafi0101/traefik-ssl-certificate-exporter/pulls)
 <div align="center">
