@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"os"
 	"rafi0101/traefik-ssl-certificate-exporter/models"
+	"reflect"
 	"strings"
 
 	"github.com/spf13/pflag"
@@ -75,33 +76,61 @@ func main() {
 				os.Exit(1)
 			}
 
-			//Write privateKey to destination path
-			privateKeyFile, err := os.Create(certPath + "privkey.pem")
+			// ------------- [START] Write privateKey to destination path ------------- //
+			privateKeyFilePath := certPath + "privkey.pem"
+
+			//Open or Create privateKey is not exists
+			privateKeyFile, err := os.OpenFile(privateKeyFilePath, os.O_RDWR|os.O_CREATE, 0600)
 			if err != nil {
 				fmt.Println("Failed to create privateKey file for ", certificate.Domain.Main, " :", err)
 				os.Exit(1)
 			}
-			_, err = privateKeyFile.Write(privateKey)
-			if err != nil {
-				fmt.Println("Failed to write privateKey for ", certificate.Domain.Main, " :", err)
-				os.Exit(1)
-			}
-			privateKeyFile.Chmod(0600)
-			privateKeyFile.Chown(ownerId, groupId)
 
-			//Write fullChain to destination path
-			fullChainFile, err := os.Create(certPath + "fullchain.pem")
+			//Read old privateKey
+			privateKeyOld, err := ioutil.ReadFile(privateKeyFilePath)
 			if err != nil {
-				fmt.Println("Failed to create fullchain file for ", certificate.Domain.Main, " :", err)
+				fmt.Println(err)
 				os.Exit(1)
 			}
-			_, err = fullChainFile.Write(fullChain)
+
+			//Compate old and new privateKey. If they are identical the file won't be touched
+			if !reflect.DeepEqual(privateKeyOld, privateKey) {
+				_, err = privateKeyFile.Write(privateKey)
+				if err != nil {
+					fmt.Println("Failed to write privateKey for ", certificate.Domain.Main, " :", err)
+					os.Exit(1)
+				}
+				privateKeyFile.Chown(ownerId, groupId)
+			}
+			// ------------- [END] Write privateKey to destination path ------------- //
+
+			// ------------- [START] Write fullChain to destination path ------------- //
+			fullChainFilePath := certPath + "fullchain.pem"
+
+			//Open or Create fullChain is not exists
+			fullChainFile, err := os.OpenFile(fullChainFilePath, os.O_RDWR|os.O_CREATE, 0644)
 			if err != nil {
-				fmt.Println("Failed to write fullchain for ", certificate.Domain.Main, " :", err)
+				fmt.Println("Failed to create fullChain file for ", certificate.Domain.Main, " :", err)
 				os.Exit(1)
 			}
-			fullChainFile.Chmod(0644)
-			fullChainFile.Chown(ownerId, groupId)
+
+			//Read old fullChain
+			fullChainOld, err := ioutil.ReadFile(fullChainFilePath)
+			if err != nil {
+				fmt.Println(err)
+				os.Exit(1)
+			}
+
+			//Compate old and new fullChain. If they are identical the file won't be touched
+			if !reflect.DeepEqual(fullChainOld, fullChain) {
+				_, err = fullChainFile.Write(fullChain)
+				if err != nil {
+					fmt.Println("Failed to write fullChain for ", certificate.Domain.Main, " :", err)
+					os.Exit(1)
+				}
+				fullChainFile.Chown(ownerId, groupId)
+			}
+			// ------------- [END] Write fullChain to destination path ------------- //
 
 			//Convert fullChain []byte to string
 			fullChainString := string(fullChain)
@@ -117,33 +146,61 @@ func main() {
 			cert := fullChainString[:fullChainIndex]
 			chain := fullChainString[fullChainIndex+1:]
 
-			//Write cert to destination path
-			certFile, err := os.Create(certPath + "cert.pem")
+			// ------------- [START] Write cert to destination path ------------- //
+			certFilePath := certPath + "cert.pem"
+
+			//Open or Create cert is not exists
+			certFile, err := os.OpenFile(certFilePath, os.O_RDWR|os.O_CREATE, 0644)
 			if err != nil {
 				fmt.Println("Failed to create cert file for ", certificate.Domain.Main, " :", err)
 				os.Exit(1)
 			}
-			_, err = certFile.WriteString(cert)
+
+			//Read old cert
+			certOld, err := ioutil.ReadFile(certFilePath)
 			if err != nil {
-				fmt.Println("Failed to write cert for ", certificate.Domain.Main, " :", err)
+				fmt.Println(err)
 				os.Exit(1)
 			}
-			certFile.Chmod(0644)
-			certFile.Chown(ownerId, groupId)
 
-			//Write chain to destination path
-			chainFile, err := os.Create(certPath + "chain.pem")
+			//Compate old and new cert. If they are identical the file won't be touched
+			if !reflect.DeepEqual(string(certOld), cert) {
+				_, err = certFile.WriteString(cert)
+				if err != nil {
+					fmt.Println("Failed to write cert for ", certificate.Domain.Main, " :", err)
+					os.Exit(1)
+				}
+				certFile.Chown(ownerId, groupId)
+			}
+			// ------------- [END] Write cert to destination path ------------- //
+
+			// ------------- [START] Write chain to destination path ------------- //
+			chainFilePath := certPath + "chain.pem"
+
+			//Open or Create chain is not exists
+			chainFile, err := os.OpenFile(chainFilePath, os.O_RDWR|os.O_CREATE, 0644)
 			if err != nil {
 				fmt.Println("Failed to create chain file for ", certificate.Domain.Main, " :", err)
 				os.Exit(1)
 			}
-			_, err = chainFile.WriteString(chain)
+
+			//Read old chain
+			chainOld, err := ioutil.ReadFile(chainFilePath)
 			if err != nil {
-				fmt.Println("Failed to write chain for ", certificate.Domain.Main, " :", err)
+				fmt.Println(err)
 				os.Exit(1)
 			}
-			chainFile.Chmod(0644)
-			chainFile.Chown(ownerId, groupId)
+
+			//Compate old and new chain. If they are identical the file won't be touched
+			if !reflect.DeepEqual(string(chainOld), chain) {
+				_, err = chainFile.WriteString(chain)
+				if err != nil {
+					fmt.Println("Failed to write chain for ", certificate.Domain.Main, " :", err)
+					os.Exit(1)
+				}
+				chainFile.Chown(ownerId, groupId)
+			}
+			// ------------- [END] Write chain to destination path ------------- //
 
 		}
 	}
