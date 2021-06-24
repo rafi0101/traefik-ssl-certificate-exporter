@@ -11,10 +11,13 @@
 
 Go tool to export traefik ssl certificates
 
+The Docker container exports periodically the traefik ssl certificates and make them available in the ```certs/``` folder
+
 Content
 -----------
 * [Important](#Important)
 * [Usage](#Usage)
+* [Variables](#Variables)
 * [Input](#Input)
 * [Output](#Output)
 * [Developed by](#Developed-by)
@@ -26,11 +29,27 @@ This tool only works with [Acmev2](https://letsencrypt.org/docs/client-options/)
 
 Usage:
 ----------
+
+### Command line:
 ```bash
 go build && ./traefik-ssl-certificate-exporter --source traefik/acme.json --dest certs/
 ```
-These are the default values for ```source``` and ```dest```
 
+### Docker:
+
+Docker image: [rafi0101/traefik-ssl-certificate-exporter](https://hub.docker.com/r/rafi0101/traefik-ssl-certificate-exporter)
+
+See [docker-compose.yml](docker-compose.yml)
+
+Variables:
+----------
+| CLI      | Docker        | Default Value           | Description  |
+| -------- | ------------- | ------------------------| --------|
+| --source | -             | ```traefik/acme.json``` | [Input](#Input) |
+| --dest   | -             | ```certs/```            | [Output](#Output) |
+| --owner  | CERT_OWNER_ID | ```0 (root)```          | owner for the extracted cert/keys |
+| --group  | CERT_GROUP_ID | ```0 (root)```          | group for the extracted cert/keys |
+| -        | CRON_TIME     | ```* * * * *```         | cron time for the container to extract certs |
 
 Input:
 ----------
