@@ -1,0 +1,16 @@
+version: '3'
+
+services:
+  traefik-ssl-certificate-exporter:
+    image: rafi0101/traefik-ssl-certificate-exporter:latest
+    environment:
+      CRON_TIME: "* * * * *"
+      CERT_OWNER_ID: "0"
+      CERT_GROUP_ID: "1000"
+    volumes:
+      - ./traefik/acme.json:/app/traefik/acme.json
+      - ./certs:/app/certs
+    restart: unless-stopped
+
+
+
