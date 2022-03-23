@@ -17,9 +17,9 @@ FROM debian:latest
 LABEL maintainer="Raphael Ebner"
 WORKDIR /app
 
-ENV CRON_TIME = "* * * * *"
-ENV CERT_OWNER_ID = "root"
-ENV CERT_GROUP_ID = "root"
+ENV CRON_TIME "* * * * *"
+ENV CERT_OWNER_ID "root"
+ENV CERT_GROUP_ID "root"
 
 COPY --from=0 /app/traefik-ssl-certificate-exporter ./
 RUN apt-get update && apt-get install -y cron
