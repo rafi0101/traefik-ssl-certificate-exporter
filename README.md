@@ -50,6 +50,7 @@ Variables:
 | --owner  | CERT_OWNER_ID | ```0 (root)```          | owner for the extracted cert/keys |
 | --group  | CERT_GROUP_ID | ```0 (root)```          | group for the extracted cert/keys |
 | -        | CRON_TIME     | ```* * * * *```         | cron time for the container to extract certs |
+| -        | ON_START      | `1` (true)              | export certs on start |
 
 Input:
 ----------
