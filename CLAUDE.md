@@ -15,7 +15,7 @@ go vet ./...
 docker build -t traefik-ssl-certificate-exporter .
 ```
 
-- There are no tests. CI (`.github/workflows/go.yml`) only runs `go build` on Go 1.16.5.
+- There are no tests. CI (`.github/workflows/go.yml`) only runs `go build` on Go 1.27.3.
 - `traefik/example.acme.json` shows the structure only. Its `certificate`/`key` values are placeholders and are not valid base64, so running the exporter against it fails at the decode step. For an end-to-end run you need a real `acme.json` (gitignored as `traefik/acme.json`).
 
 ## Layout
@@ -38,7 +38,7 @@ For every certificate in every resolver:
 
 - `Chown` errors are deliberately ignored. This lets non-root local runs with the default owner/group 0 succeed.
 - Permission modes only apply when a file is created. Existing files keep their mode.
-- `io/ioutil` is used (deprecated, but fine on Go 1.16, which CI and `go.mod` target). Avoid APIs newer than 1.16.
+- `io/ioutil` is still used (deprecated but working). CI and `go.mod` target Go 1.27.
 
 ## Config surface
 
